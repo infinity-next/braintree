@@ -1,27 +1,28 @@
 {
-	"name": "infinity-next/braintree",
-	"description": "Braintree integration with the Laravel framework.",
-	"keywords": ["laravel", "braintree", "cashier"],
-	"license": "MIT",
-	"type": "project",
-	
-	"authors": [
-		{
-			"name": "Joshua Moon",
-			"email": "josh@jaw.sh",
-			"homepage": "http://jaw.sh",
-			"role": "Developer"
-		}
-	],
-	
-	"require": {
-		"php": ">=5.3.0",
-		"braintree/braintree_php": "2.x"
-	},
-	
-	"autoload": {
-		"psr-4": {
-			"InfinityNext\\Braintree\\": "src/"
-		}
-	}
+    "name": "infinity-next/braintree",
+    "description": "Braintree integration with the Laravel framework.",
+    "keywords": ["laravel", "braintree", "cashier"],
+    "license": "MIT",
+    "type": "project",
+    
+    "authors": [
+        {
+            "name": "Joshua Moon",
+            "email": "josh@jaw.sh",
+            "homepage": "http://jaw.sh",
+            "role": "Developer"
+        }
+    ],
+    
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "InfinityNext\\Braintree\\": "src/"
+        }
+    },
+    
+    "require": {
+        "php": ">=5.3.0",
+        "braintree/braintree_php": "2.x"
+    }
 }
