@@ -28,6 +28,7 @@ class BraintreeServiceProvider extends ServiceProvider
 	 */
 	public function register()
 	{
+		/*
 		$this->app->bindShared('Laravel\Cashier\BillableRepositoryInterface', function () {
 			return new EloquentBillableRepository;
 		});
@@ -37,6 +38,7 @@ class BraintreeServiceProvider extends ServiceProvider
 		});
 		
 		$this->commands('command.cashier.table');
+		*/
 	}
 	
 }

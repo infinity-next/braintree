@@ -2,8 +2,9 @@
 
 use InfinityNext\Braintree\Contracts\Billable as BillableContract;
 
-use \Braintree_Configuration;
-use \Braintree_Transaction;
+use \Braintree_Configuration as Braintree;
+use \Braintree_ClientToken as BraintreeClientToken;
+use \Braintree_Transaction as BraintreeCharge;
 
 use Carbon\Carbon;
 use InvalidArgumentException;
@@ -72,10 +73,10 @@ class BraintreeGateway
 		$this->plan = $plan;
 		$this->billable = $billable;
 		
-		Braintree_Configuration::environment($this->getBraintreeEnvironment());
-		Braintree_Configuration::merchantId($this->getBraintreeMerchantId());
-		Braintree_Configuration::publicKey($this->getBraintreePublicKey());
-		Braintree_Configuration::privateKey($this->getBraintreePrivateKey());
+		Braintree::environment($this->getBraintreeEnvironment());
+		Braintree::merchantId($this->getBraintreeMerchantId());
+		Braintree::publicKey($this->getBraintreePublicKey());
+		Braintree::privateKey($this->getBraintreePrivateKey());
 	}
 	
 	/**
@@ -87,23 +88,24 @@ class BraintreeGateway
 	 */
 	public function charge($amount, array $options = array())
 	{
-		$options = array_merge([
-			'currency' => $this->getCurrency(),
-		], $options);
+		// $options = array_merge([
+		// 	'currency' => $this->getCurrency(),
+		// ], $options);
 		
-		$options['amount'] = $amount;
+		$options['amount'] = $amount / 100;
 		
-		if (! array_key_exists('source', $options) && $this->billable->hasStripeId()) {
-			$options['customer'] = $this->billable->getStripeId();
-		}
+		// if (! array_key_exists('source', $options) && $this->billable->hasBraintreeId()) {
+		// 	$options['customer'] = $this->billable->getBraintreeId();
+		// }
 		
-		if (! array_key_exists('source', $options) && ! array_key_exists('customer', $options)) {
-			throw new InvalidArgumentException("No payment source provided.");
-		}
+		// if (! array_key_exists('source', $options) && ! array_key_exists('customer', $options)) {
+		// 	throw new InvalidArgumentException("No payment source provided.");
+		// }
 		
 		try {
-			$response = StripeCharge::create($options);
-		} catch (StripeErrorCard $e) {
+			$response = BraintreeCharge::sale($options);
+		}
+		catch (StripeErrorCard $e) {
 			return false;
 		}
 		
@@ -111,43 +113,62 @@ class BraintreeGateway
 	}
 	
 	/**
+	 * Create a Braintree API customer id for the instance.
 	 *
+	 * @return string
+	 */
+	public function createBraintreeId()
+	{
+		return BraintreeClientToken::generate();
+	}
+	
+	/**
+	 * Get the Braintree API environment type for the instance.
 	 *
-	 *
+	 * @return string
 	 */
 	public function getBraintreeEnvironment()
 	{
-		
+		return $this->billable->getBraintreeEnvironment();
 	}
 	
 	/**
+	 * Get the Braintree API merchant id for the instance.
 	 *
-	 *
-	 *
+	 * @return string
 	 */
 	public function getBraintreeMerchantId()
 	{
-		
+		return $this->billable->getBraintreeMerchantId();
 	}
 	
 	/**
+	 * Get the Braintree API public key for the instance.
 	 *
-	 *
-	 *
+	 * @return string
 	 */
 	public function getBraintreePublicKey()
 	{
-		
+		return $this->billable->getBraintreePublicKey();
 	}
 	
 	/**
+	 * Get the Braintree API private key for the instance.
 	 *
-	 *
-	 *
+	 * @return string
 	 */
 	public function getBraintreePrivateKey()
 	{
-		
+		return $this->billable->getBraintreePrivateKey();
 	}
 	
+	/**
+	 * Get the currency for the billable entity.
+	 *
+	 * @return string
+	 */
+	protected function getCurrency()
+	{
+		return $this->billable->getCurrency();
+	}
 }

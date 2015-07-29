@@ -7,14 +7,35 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 trait Billable
 {
-
+	
 	/**
 	 * The Braintree API key.
 	 *
 	 * @var string
 	 */
-	protected static $BraintreeKey;
-
+	protected static $BraintreeKeyEnvironment;
+	
+	/**
+	 * The Braintree API key.
+	 *
+	 * @var string
+	 */
+	protected static $BraintreeMerchantId;
+	
+	/**
+	 * The Braintree API key.
+	 *
+	 * @var string
+	 */
+	protected static $BraintreePublicKey;
+	
+	/**
+	 * The Braintree API key.
+	 *
+	 * @var string
+	 */
+	protected static $BraintreePrivateKey;
+	
 	/**
 	 * Get the name that should be shown on the entity's invoices.
 	 *
@@ -318,7 +339,7 @@ trait Billable
 	 */
 	public function hasBraintreeId()
 	{
-		return ! is_null($this->Braintree_id);
+		return ! is_null($this->braintree_id);
 	}
 
 	/**
@@ -328,9 +349,19 @@ trait Billable
 	 */
 	public function getBraintreeId()
 	{
-		return $this->Braintree_id;
+		return $this->braintree_id;
 	}
-
+	
+	/**
+	 * Generates a new Braintree ID for the instance.
+	 *
+	 * @return string
+	 */
+	public function createBraintreeId()
+	{
+		$this->setBraintreeId( (new BraintreeGateway($this))->createBraintreeId() );
+	}
+	
 	/**
 	 * Get the name of the Braintree ID database column.
 	 *
@@ -338,18 +369,18 @@ trait Billable
 	 */
 	public function getBraintreeIdName()
 	{
-		return 'Braintree_id';
+		return 'braintree_id';
 	}
 
 	/**
 	 * Set the Braintree ID for the entity.
 	 *
-	 * @param  string  $Braintree_id
+	 * @param  string  $braintree_id
 	 * @return \InfinityNext\Braintree\Contracts\Billable
 	 */
-	public function setBraintreeId($Braintree_id)
+	public function setBraintreeId($braintree_id)
 	{
-		$this->Braintree_id = $Braintree_id;
+		$this->braintree_id = $braintree_id;
 
 		return $this;
 	}
@@ -519,25 +550,89 @@ trait Billable
 	{
 		return '$'.$amount;
 	}
-
+	
 	/**
 	 * Get the Braintree API key.
 	 *
 	 * @return string
 	 */
-	public static function getBraintreeKey()
+	public static function getBraintreeEnvironment()
 	{
-		return static::$BraintreeKey ?: Config::get('services.Braintree.secret');
+		return static::$BraintreeKeyEnvironment ?: Config::get('services.braintree.environment');
 	}
-
+	
 	/**
 	 * Set the Braintree API key.
 	 *
 	 * @param  string  $key
 	 * @return void
 	 */
-	public static function setBraintreeKey($key)
+	public static function setBraintreeEnvironment($key)
 	{
-		static::$BraintreeKey = $key;
+		static::$BraintreeKeyEnvironment = $key;
 	}
+	
+	/**
+	 * Get the Braintree API key.
+	 *
+	 * @return string
+	 */
+	public static function getBraintreeMerchantId()
+	{
+		return static::$BraintreeMerchantId ?: Config::get('services.braintree.merchant');
+	}
+	
+	/**
+	 * Set the Braintree API key.
+	 *
+	 * @param  string  $key
+	 * @return void
+	 */
+	public static function setBraintreeMerchantId($key)
+	{
+		static::$BraintreeMerchantId = $key;
+	}
+	
+	/**
+	 * Get the Braintree API key.
+	 *
+	 * @return string
+	 */
+	public static function getBraintreePublicKey()
+	{
+		return static::$BraintreePublicKey ?: Config::get('services.braintree.public');
+	}
+	
+	/**
+	 * Set the Braintree API key.
+	 *
+	 * @param  string  $key
+	 * @return void
+	 */
+	public static function setBraintreePublicKey($key)
+	{
+		static::$BraintreePublicKey = $key;
+	}
+	
+	/**
+	 * Get the Braintree API key.
+	 *
+	 * @return string
+	 */
+	public static function getBraintreePrivateKey()
+	{
+		return static::$BraintreePrivateKey ?: Config::get('services.braintree.secret');
+	}
+	
+	/**
+	 * Set the Braintree API key.
+	 *
+	 * @param  string  $key
+	 * @return void
+	 */
+	public static function setBraintreePrivateKey($key)
+	{
+		static::$BraintreePrivateKey = $key;
+	}
+	
 }

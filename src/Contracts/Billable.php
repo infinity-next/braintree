@@ -1,4 +1,4 @@
-<?php namespace Laravel\Cashier\Contracts;
+<?php namespace InfinityNext\Braintree\Contracts;
 
 use DateTime;
 
@@ -133,10 +133,10 @@ interface Billable
 	/**
 	 * Set the Braintree ID for the entity.
 	 *
-	 * @param  string  $Braintree_id
+	 * @param  string  $braintree_id
 	 * @return \InfinityNext\Braintree\Contracts\Billable
 	 */
-	public function setBraintreeId($Braintree_id);
+	public function setBraintreeId($braintree_id);
 	
 	/**
 	 * Get the current subscription ID.
