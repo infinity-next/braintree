@@ -4,7 +4,9 @@ use InfinityNext\Braintree\Contracts\Billable as BillableContract;
 
 use \Braintree_Configuration as Braintree;
 use \Braintree_ClientToken as BraintreeClientToken;
+use \Braintree_Customer as BraintreeCustomer;
 use \Braintree_Transaction as BraintreeCharge;
+use \Braintree_Subscription as BraintreeSubscription;
 
 use Carbon\Carbon;
 use InvalidArgumentException;
@@ -102,15 +104,35 @@ class BraintreeGateway
 		// 	throw new InvalidArgumentException("No payment source provided.");
 		// }
 		
-		try {
+		// try {
 			$response = BraintreeCharge::sale($options);
-		}
-		catch (StripeErrorCard $e) {
-			return false;
-		}
+		// }
+		// catch (StripeErrorCard $e) {
+		// 	return false;
+		// }
 		
 		return $response;
 	}
+	/**
+	 * Subscribe to the plan for the first time.
+	 *
+	 * @param  string  $token
+	 * @param  array   $properties
+	 * @param  object|null  $customer
+	 * @return void
+	 */
+	public function create($token, array $properties = array(), $customer = null)
+	{
+		$parameters = array_merge([
+			'paymentMethodNonce' => $token,
+		], $properties);
+		
+		$response = BraintreeCustomer::create($parameters);
+		
+		
+		return $response;
+	}
+	
 	
 	/**
 	 * Create a Braintree API customer id for the instance.

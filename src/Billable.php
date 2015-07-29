@@ -224,9 +224,10 @@ trait Billable
 	public function subscribed()
 	{
 		if ($this->requiresCardUpFront()) {
-			return $this->BraintreeIsActive() || $this->onGracePeriod();
-		} else {
-			return $this->BraintreeIsActive() || $this->onTrial() || $this->onGracePeriod();
+			return $this->braintreeIsActive() || $this->onGracePeriod();
+		}
+		else {
+			return $this->braintreeIsActive() || $this->onTrial() || $this->onGracePeriod();
 		}
 	}
 
