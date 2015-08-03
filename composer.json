@@ -23,6 +23,6 @@
     
     "require": {
         "php": ">=5.3.0",
-        "braintree/braintree_php": "2.x"
+        "braintree/braintree_php": "3.x"
     }
 }
